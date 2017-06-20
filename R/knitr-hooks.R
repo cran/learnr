@@ -97,7 +97,9 @@ install_knitr_hooks <- function() {
       labels <- exercise_chunks_for_setup_chunk(options$label)
       if (grepl("-setup$", options$label))
         labels <- c(labels, sub("-setup$", "", options$label))
-      label_query <- paste0("knitr::all_labels(label %in% ", deparse(labels), ", ",
+      labels <- paste0('"', labels, '"')
+      labels <- paste0('c(', paste(labels, collapse = ', ') ,')')
+      label_query <- paste0("knitr::all_labels(label %in% ", labels, ", ",
                             "identical(exercise.eval, ", !exercise_eval, "))")
       
       default_reversed <- length(eval(parse(text = label_query))) > 0
@@ -126,12 +128,14 @@ install_knitr_hooks <- function() {
                         options$exercise.lines, 0)
         completion  <- as.numeric(options$exercise.completion %||% 1 > 0)
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 1 > 0)
+        startover <- as.numeric(options$exercise.startover %||% 1 > 0)
         caption <- ifelse(is.null(options$exercise.cap), "Code", options$exercise.cap)
         paste0('<div class="tutorial-', class, 
                '" data-label="', options$label, 
                '" data-caption="', caption, 
                '" data-completion="', completion,
                '" data-diagnostics="', diagnostics,
+               '" data-startover="', startover,
                '" data-lines="', lines, '">')
       }
       # after exercise

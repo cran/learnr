@@ -20,6 +20,9 @@ function Tutorial() {
   // Alias this
   var thiz = this;
   
+  // Init timing log
+  this.$initTimingLog();
+  
   // API: provide init event
   this.onInit = function(handler) {
     this.$initCallbacks.add(handler);
@@ -65,6 +68,40 @@ function Tutorial() {
 }
 
 /* Utilities */
+
+Tutorial.prototype.$initTimingLog = function() {
+  try {
+    if (performance.mark !== undefined) {
+      performance.mark("tutorial-start-mark");
+    }
+  } catch(e) {
+    console.log("Error initializing log timing: " + e.message);
+  }
+};
+
+Tutorial.prototype.$logTiming = function(name) {
+  try {
+    if (performance.mark !== undefined && 
+        performance.measure !== undefined &&
+        performance.getEntriesByName !== undefined &&
+        this.queryVar('log-timings') === '1') {
+      performance.mark(name + "-mark");
+      performance.measure(name, "tutorial-start-mark", name + "-mark");
+      var entries = performance.getEntriesByName(name);
+      console.log("(Timing) " + name + ": " + Math.round(entries[0].duration) + "ms");
+    }
+  } catch(e) {
+    console.log("Error logging timing: " + e.message);
+  }
+};
+
+Tutorial.prototype.queryVar = function(name) {
+  return decodeURI(window.location.search.replace(
+    new RegExp("^(?:.*[&\\?]" +
+               encodeURI(name).replace(/[\.\+\*]/g, "\\$&") +
+               "(?:\\=([^&]*))?)?.*$", "i"),
+    "$1"));
+};
 
 Tutorial.prototype.$idSelector = function(id) {
   return "#" + id.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
@@ -258,7 +295,7 @@ Tutorial.prototype.$initializeProgress = function(progress_events) {
 
 /* Shared utility functions */
 
-Tutorial.prototype.$serverRequest = function (type, data, success) {
+Tutorial.prototype.$serverRequest = function (type, data, success, error) {
   return $.ajax({
     type: "POST",
     url: "session/" + Shiny.shinyapp.config.sessionId + 
@@ -266,7 +303,8 @@ Tutorial.prototype.$serverRequest = function (type, data, success) {
     contentType: "application/json",
     data: JSON.stringify(data),
     dataType: "json",
-    success: success
+    success: success,
+    error: error
   });
 };
 
@@ -426,6 +464,7 @@ Tutorial.prototype.$initializeVideos = function() {
   });
   
   // we'll initialize video player APIs off of $restoreState
+  this.$logTiming("initialized-videos");
 };
 
 Tutorial.prototype.$initializeVideoPlayers = function(video_progress) {
@@ -629,6 +668,7 @@ Tutorial.prototype.$initializeExercises = function() {
   this.$initializeExerciseSolutions();
   this.$initializeExerciseEvaluation();
   
+  this.$logTiming("initialized-exercises");
 };
 
 Tutorial.prototype.$exerciseForLabel = function(label) {
@@ -888,13 +928,18 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     // use code completion
     var completion  = exercise.attr('data-completion') === "1";
     var diagnostics = exercise.attr('data-diagnostics') === "1";
+    
+    // support startover
+    var startover_code = exercise.attr('data-startover') === "1" ? code : null;
+    
         
-    // set tutorial options
+    // set tutorial options/data
     editor.tutorial = {
       label: label,
       setup_code: setup_code,
       completion: completion,
-      diagnostics: diagnostics
+      diagnostics: diagnostics,
+      startover_code: startover_code
     };
     
     // bind execution keys 
@@ -936,10 +981,9 @@ Tutorial.prototype.$initializeExerciseEditors = function() {
     updateAceHeight();
     editor.getSession().on('change', updateAceHeight);
 
-    // add solution button if necessary
+    // add hint/solution/startover buttons if necessary
     thiz.$addSolution(exercise, panel_heading, editor);
-    
-    
+  
     exercise.parents('.section').on('shown', function() {
       editor.resize(true);
     });
@@ -984,15 +1028,20 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
   }
   var hintDiv = thiz.$exerciseHintDiv(label);
   
-  // helper function to add a hint button
-  function addHintButton(caption) {
+  // function to add a helper button
+  function addHelperButton(icon, caption) {
     var button = $('<a class="btn btn-light btn-xs btn-tutorial-solution"></a>');
     button.attr('role', 'button');
     button.attr('title', caption);
-    button.append($('<i class="fa fa-lightbulb-o"></i>'));
+    button.append($('<i class="fa ' + icon + '"></i>'));
     button.append(' ' + caption); 
     panel_heading.append(button); 
     return button;
+  }
+  
+  // function to add a hint button
+  function addHintButton(caption) {
+    return addHelperButton("fa-lightbulb-o", caption);  
   }
   
   // helper function to record solution/hint requests
@@ -1002,7 +1051,16 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
       index: hintIndex
     });
   }
-
+  
+  // add a startover button
+  if (editor.tutorial.startover_code !== null) {
+    var startOverButton = addHelperButton("fa-refresh", "Start Over");
+    startOverButton.on('click', function() {
+      editor.setValue(editor.tutorial.startover_code, -1);
+      thiz.$clearExerciseOutput(exercise);
+    });
+  }
+  
   // if we have a hint div
   if (hintDiv != null) {
     
@@ -1022,12 +1080,14 @@ Tutorial.prototype.$addSolution = function(exercise, panel_heading, editor) {
       // prepend it to the output frame (if a hint isn't already in there)
       var outputFrame = exercise.children('.tutorial-exercise-output-frame');
       if (outputFrame.find('.tutorial-hint').length == 0) {
-        var panel = $('<div class="panel panel-default"></div>');
+        var panel = $('<div class="panel panel-default tutorial-hint-panel"></div>');
         var panelBody = $('<div class="panel-body"></div>');
         var hintDivClone = hintDiv.clone().attr('id', '').css('display', 'inherit');
         panelBody.append(hintDivClone);
         panel.append(panelBody);
         outputFrame.prepend(panel);
+      } else {
+        outputFrame.find('.tutorial-hint-panel').remove();
       }
     });
     
@@ -1319,6 +1379,8 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
       if (!restoring) {
         ensureExerciseVisible(el);
         thiz.$exerciseContainer(el).data('restoring', false);
+      } else {
+        thiz.$logTiming("restored-exericse-" + exerciseLabel(el));
       }
     },
     
@@ -1333,11 +1395,19 @@ Tutorial.prototype.$initializeExerciseEvaluation = function() {
   Shiny.outputBindings.register(exerciseOutputBinding, 'tutorial.exerciseOutput');
 };
 
+Tutorial.prototype.$clearExerciseOutput = function(exercise) {
+  var outputFrame = $(exercise).find('.tutorial-exercise-output-frame');
+  var outputDiv = $(outputFrame).children('.tutorial-exercise-output');
+  outputFrame.children().not(outputDiv).remove();
+  outputDiv.empty();
+}
+
 
 /* Storage */
 
 Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   
+ 
   // alias this
   var thiz = this;
   
@@ -1346,24 +1416,32 @@ Tutorial.prototype.$initializeStorage = function(identifiers, success) {
   // degrade gracefully by either not restoring any state or restoring whatever
   // state we had stored)
   thiz.$store = window.localforage.createInstance({ 
-    name: "Learnr-Tutorial-Storage", 
-    storeName: window.btoa(identifiers.tutorial_id + 
-                           identifiers.tutorial_version)
+    name: "LearnrTutorialProgress", 
+    storeName: "Store_" + window.btoa(identifiers.tutorial_id + 
+                                      identifiers.tutorial_version)
   });
   
-  // custom message handler to update store
-  Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
-    thiz.$store.setItem(message.id, message.data);
-  });
+  var objects = {};
+  if (thiz.$store) {
   
-  // retreive the currently stored objects then pass them down to restore_state
-  var objects = null;
-  thiz.$store.iterate(function(value, key, iterationNumber) {
-    objects = objects || {};
-    objects[key] = value;
-  }).then(function() {
+    // custom message handler to update store
+    Shiny.addCustomMessageHandler("tutorial.store_object", function(message) {
+      thiz.$store.setItem(message.id, message.data);
+    });
+    
+    // retreive the currently stored objects then pass them down to restore_state
+    thiz.$store.iterate(function(value, key, iterationNumber) {
+      objects = objects || {};
+      objects[key] = value;
+    }).then(function() {
+      success(objects);
+    }).catch(function(err) {
+      console.log(err);
+      success(objects);
+    });
+  } else {
     success(objects);
-  });
+  }
 };
 
 
@@ -1373,7 +1451,10 @@ Tutorial.prototype.$restoreState = function(objects) {
   var thiz = this;
   
   // retreive state from server
+  thiz.$logTiming("restoring-state");
   this.$serverRequest("restore_state", objects, function(data) {
+    
+    thiz.$logTiming("state-received");
     
     // initialize client state
     thiz.$initializeClientState(data.client_state);
@@ -1411,6 +1492,8 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
       var label = id;
       var code = submission.data.code;
       var checked = submission.data.checked;
+      
+      thiz.$logTiming("restoring-exercise-" + label);
     
       // find the editor 
       var editorContainer = thiz.$exerciseEditor(label);
@@ -1467,12 +1550,16 @@ Tutorial.prototype.$restoreSubmissions = function(submissions) {
 
 
 Tutorial.prototype.$removeState = function(completed) {
-  this.$store.clear()
-    .then(completed)
-    .catch(function(err) {
-      console.log(err);
-      completed();
-    });
+  if (this.$store) {
+    this.$store.clear()
+      .then(completed)
+      .catch(function(err) {
+        console.log(err);
+        completed();
+      });
+  } else {
+    completed();
+  }
 };
 
 Tutorial.prototype.$initializeClientState = function(client_state) {
@@ -1530,22 +1617,38 @@ Tutorial.prototype.$initializeServer = function() {
   // one-shot function to initialize server (wait for Shiny.shinyapp
   // to be available before attempting to call server)
   var thiz = this;
+  thiz.$logTiming("wait-server-available");
   function initializeServer() {
+    
+    // retry after a delay
+    function retry(delay) {
+      setTimeout(function(){
+        initializeServer();
+      }, delay);  
+    }
+    
     // wait for shiny config to be available (required for $serverRequest)
     if (thiz.$isServerAvailable()) {
+      thiz.$logTiming("server-available");
       thiz.$serverRequest("initialize", { location: window.location }, 
-        function(identifiers) {
+        function(response) {
+          thiz.$logTiming("server-initialized");
           // initialize storage then restore state
-          thiz.$initializeStorage(identifiers, function(objects) {
+          thiz.$initializeStorage(response.identifiers, function(objects) {
+            thiz.$logTiming("storage-initialized");
             thiz.$restoreState(objects);
           });
+        },
+        function (jqXHR) {
+          // look for standard error indicating shiny server is not quite ready
+          if ((jqXHR.status == 500) && (jqXHR.responseText == "ERROR: attempt to apply non-function" )) {
+            retry(2000);
+          }
         }
       );
     }
     else {
-      setTimeout(function(){
-        initializeServer();
-      },250);
+      retry(250);
     }
   }
   

@@ -72,6 +72,20 @@ var TutorialDiagnostics = function(tutorial) {
 
     // fix up rules
     rules["start"].unshift({
+      token : "string",
+      regex : '"(?:(?:\\\\.)|(?:[^"\\\\]))*?"',
+      merge : false,
+      next  : "start"
+    });
+    
+    rules["start"].unshift({
+      token : "string",
+      regex : "'(?:(?:\\\\.)|(?:[^'\\\\]))*?'",
+      merge : false,
+      next  : "start"
+    });
+    
+    rules["start"].unshift({
       token : "keyword.operator",
       regex : ":::|::|:=|%%|>=|<=|==|!=|\\->|<\\-|<<\\-|\\|\\||&&|=|\\+|\\-|\\*\\*?|/|\\^|>|<|!|&|\\||~|\\$|:|@|\\?",
       merge : false,
@@ -112,7 +126,7 @@ var TutorialDiagnostics = function(tutorial) {
 
     // remove whitespace, comments (not relevant for syntax diagnostics)
     tokens = tokens.filter(function(token) {
-      return token.type !== "comment" && !/\s+/.test(token.value);
+      return token.type !== "comment" && !/^\s+$/.test(token.value);
     });
 
     // state related to our simple diagnostics engine
@@ -158,6 +172,7 @@ var TutorialDiagnostics = function(tutorial) {
       }
 
       if (i > 0) {
+
         var lhs = tokens[i - 1];
         var rhs = tokens[i];
         var bracket = bracketStack[bracketStack.length - 1] || {};
