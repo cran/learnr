@@ -1,6 +1,7 @@
-aa6e58ace3612fe59465321c34b8655c *DESCRIPTION
+2db384119cb75ee8132f56eaa4e65f64 *DESCRIPTION
 e3fc50a88d0a364313df4b21ef20c29e *LICENSE
 090772a08f15147ef3ce9e2c4902bcc2 *NAMESPACE
+b0af02a445df5704f2fa58ead23eb1a1 *NEWS.md
 c9d981c60d3a5c1b6f2377a9705782f5 *R/ace.R
 862bbaddca8faae2dff6a563faab5af9 *R/evaluators.R
 91986ec2036f46c3f5e9601517124cec *R/events.R
@@ -16,7 +17,7 @@ c9d981c60d3a5c1b6f2377a9705782f5 *R/ace.R
 fff886b1d5b97089f182c5511ff8d354 *R/quiz.R
 ffe8f2681977e9ab1d53cbc8874a9408 *R/run.R
 ce158165bb3a0b41dfa271da49acbc42 *R/storage.R
-03ba22c2c748eb64ef374f3f99657fd1 *R/tutorial-format.R
+01069ac274c322c1478f51a84ad64803 *R/tutorial-format.R
 95afb7532d0dd0b62db36eddf59dc1b6 *R/utils.R
 d2c1f102d4857cd0b84735c16432748f *inst/examples/apparmor/apparmor_evaluator.R
 d91b04b275d611d458ba4a09b094ec48 *inst/htmlwidgets/lib/slickquiz/css/slickQuiz.css
