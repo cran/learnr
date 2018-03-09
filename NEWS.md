@@ -1,7 +1,18 @@
+learnr 0.9.2
+===========
+
+* Fixed [#136](https://github.com/rstudio/learnr/issues/136) by displaying full HTML messages (rather than just the text) if provided by the `incorrect` or the `correct` args to `question()`. ([#146](https://github.com/rstudio/learnr/pull/146))
+
+* Improved documentation for deploying `learnr` tutorials in Shiny Server. ([#142](https://github.com/rstudio/learnr/issues/142))
+
+* Fixed a highlight.js issue from rmarkdown 1.8. ([#133](https://github.com/rstudio/learnr/issues/133))
+
+* Fixed an false positive in the diagnostics system. ([#141](https://github.com/rstudio/learnr/issues/141))
+
 learnr 0.9.1
 ===========
 
-* Fixed a compability issue, so that existing tutorials don't break when using Pandoc 2.0. ([#130](https://github.com/rstudio/learnr/pull/130))
+* Fixed a compatibility issue, so that existing tutorials don't break when using Pandoc 2.0. ([#130](https://github.com/rstudio/learnr/pull/130))
 
 learnr 0.9.0
 ===========
