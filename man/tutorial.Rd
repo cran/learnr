@@ -7,13 +7,14 @@
 tutorial(fig_width = 6.5, fig_height = 4, fig_retina = 2,
   fig_caption = TRUE, progressive = FALSE, allow_skip = FALSE,
   dev = "png", df_print = "paged", smart = TRUE, theme = "rstudio",
+  highlight = "textmate", ace_theme = "textmate",
   mathjax = "default", extra_dependencies = NULL, css = NULL,
   includes = NULL, md_extensions = NULL, pandoc_args = NULL, ...)
 }
 \arguments{
 \item{fig_width}{Default width (in inches) for figures}
 
-\item{fig_height}{Default width (in inches) for figures}
+\item{fig_height}{Default height (in inches) for figures}
 
 \item{fig_retina}{Scaling to perform for retina displays (defaults to 2, which
 currently works for all widely used retina displays). Set to \code{NULL} to
@@ -23,7 +24,7 @@ outputting HTML directly into the markdown document).}
 
 \item{fig_caption}{\code{TRUE} to render figures with captions}
 
-\item{progressive}{Display sub-topics progresively (i.e. wait until previous
+\item{progressive}{Display sub-topics progressively (i.e. wait until previous
 topics are either completed or skipped before displaying subsequent
 topics).}
 
@@ -40,16 +41,24 @@ the \pkg{tibble} package to print a summary of the data frame. The "paged"
 method creates a paginated HTML table (note that this method is only valid
 for formats that produce HTML). In addition
 to the named methods you can also pass an arbitrary function to be used
-for printing data frames. You can disable the df_print behavior entirely
+for printing data frames. You can disable the \code{df_print} behavior entirely
 by setting the option \code{rmarkdown.df_print} to \code{FALSE}.}
 
 \item{smart}{Produce typographically correct output, converting straight
-quotes to curly quotes, --- to em-dashes, -- to en-dashes, and ... to
-ellipses.}
+quotes to curly quotes, \code{---} to em-dashes, \code{--} to en-dashes, and
+\code{...} to ellipses.}
 
 \item{theme}{Visual theme ("rstudio", default", "cerulean", "journal", "flatly",
 "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone",
 "simplex", or "yeti").}
+
+\item{highlight}{Syntax highlighting style. Supported styles include
+"default", "tango", "pygments", "kate", "monochrome",
+"espresso", "zenburn", "haddock", and "textmate". Pass ‘NULL’
+to prevent syntax highlighting.  Note, this value only pertains to standard rmarkdown code, not the Ace editor highlighting.}
+
+\item{ace_theme}{Ace theme supplied to the ace code editor for all exercises.
+See \code{learnr:::ACE_THEMES} for a list of possible values.  Defaults to \code{"textmate"}.}
 
 \item{mathjax}{Include mathjax. The "default" option uses an https URL from a
 MathJax CDN. The "local" option uses a local version of MathJax (which is
