@@ -2,12 +2,16 @@
 % Please edit documentation in R/initialize.R
 \name{initialize_tutorial}
 \alias{initialize_tutorial}
-\title{Initialize Tutorial R Markdown Extensions}
+\title{Initialize tutorial R Markdown extensions}
 \usage{
 initialize_tutorial()
 }
+\value{
+If not previously run, initializes knitr hooks and provides the
+required \code{\link[rmarkdown:shiny_prerendered_chunk]{rmarkdown::shiny_prerendered_chunk()}}s to initialize \pkg{learnr}.
+}
 \description{
 One time initialization of R Markdown extensions required by the
-\pkg{tutor} package. This function is typically called automatically
+\pkg{learnr} package. This function is typically called automatically
 as a result of using exercises or questions.
 }

@@ -1,17 +1,18 @@
 
-#' Run a tutorial
+#' List available tutorials
 #'
-#' Run a tutorial which is contained within an R package.
+#' List the tutorials that are currently available via installed R packages.
+#' Or list the specific tutorials that are contained within a given R package.
 #'
 #' @param package Name of package
 #'
-#' @details Note that when running a tutorial Rmd file with \code{run_tutorial}
-#'   the tutorial Rmd should have already been rendered as part of the
-#'   development of the package (i.e. the corresponding tutorial .html file for
-#'   the .Rmd file must exist).
+#' @return `available_tutorials()` returns a `data.frame` containing "package",
+#'   "name", "title", "description", "package_dependencies", "private", and
+#'   "yaml_front_matter".
 #'
-#' @return \code{available_tutorials} will return a \code{data.frame} containing "package", "name", "title", "description", "package_dependencies", "private", and "yaml_front_matter".
-#' @rdname available_tutorials
+#' @examples
+#' available_tutorials(package = "learnr")
+#'
 #' @export
 available_tutorials <- function(package = NULL) {
 
@@ -70,18 +71,12 @@ available_tutorials_for_package <- function(package) {
   tutorial_folders <- list.dirs(tutorials_dir, full.names = TRUE, recursive = FALSE)
   names(tutorial_folders) <- basename(tutorial_folders)
   rmd_info <- lapply(tutorial_folders, function(tut_dir) {
-    dir_rmd_files <- dir(tut_dir, pattern = "\\.Rmd$", recursive = FALSE, full.names = TRUE)
-    dir_rmd_files_length <- length(dir_rmd_files)
-    if (dir_rmd_files_length == 0) {
+    dir_rmd_file <- run_find_tutorial_rmd(tut_dir)
+    if (length(dir_rmd_file) == 0) {
       return(NULL)
     }
-    if (dir_rmd_files_length > 1) {
-      warning(
-        "Found multiple .Rmd files in \"", package, "\"'s \"", tut_dir, "\" folder.",
-        "  Using: ", dir_rmd_files[1]
-      )
-    }
-    yaml_front_matter <- rmarkdown::yaml_front_matter(dir_rmd_files[1])
+    dir_rmd_file <- file.path(tut_dir, dir_rmd_file)
+    yaml_front_matter <- rmarkdown::yaml_front_matter(dir_rmd_file)
     data.frame(
       package = package,
       name = basename(tut_dir),
@@ -150,7 +145,7 @@ get_tutorial_path <- function(name, package) {
     possible_tutorials <- tutorials$name
     msg <- paste0("Tutorial \"", name, "\" was not found in the \"", package, "\" package.")
     # if any tutorial names are _close_ tell the user
-    adist_vals <- adist(possible_tutorials, name, ignore.case = TRUE)
+    adist_vals <- utils::adist(possible_tutorials, name, ignore.case = TRUE)
     if (any(adist_vals <= 3)) {
       best_match <- possible_tutorials[which.min(adist_vals)]
       msg <- paste0(

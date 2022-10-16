@@ -5,18 +5,21 @@
 \title{Set tutorial options}
 \usage{
 tutorial_options(
-  exercise.cap = "Code",
+  exercise.cap = NULL,
   exercise.eval = FALSE,
   exercise.timelimit = 30,
   exercise.lines = NULL,
+  exercise.blanks = NULL,
   exercise.checker = NULL,
+  exercise.error.check.code = NULL,
   exercise.completion = TRUE,
   exercise.diagnostics = TRUE,
-  exercise.startover = TRUE
+  exercise.startover = TRUE,
+  exercise.reveal_solution = TRUE
 )
 }
 \arguments{
-\item{exercise.cap}{Caption for exercise chunk (defaults to \code{"Code")}.}
+\item{exercise.cap}{Caption for exercise chunk (defaults to the engine's icon or the combination of the engine and \code{" code"}).}
 
 \item{exercise.eval}{Whether to pre-evaluate the exercise so the reader can
 see some default output (defaults to \code{FALSE}).}
@@ -27,15 +30,36 @@ see some default output (defaults to \code{FALSE}).}
 \item{exercise.lines}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
 
-\item{exercise.checker}{Function used to check exercise answers.}
+\item{exercise.blanks}{A regular expression to be used to identify blanks in
+submitted code that the user should fill in. If \code{TRUE} (default), blanks
+are three or more underscores in a row. If \code{FALSE}, blank checking is not
+performed.}
+
+\item{exercise.checker}{Function used to check exercise answers
+(e.g., \code{gradethis::grade_learnr()}).}
+
+\item{exercise.error.check.code}{A string containing R code to use for checking
+code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 
 \item{exercise.completion}{Use code completion in exercise editors.}
 
 \item{exercise.diagnostics}{Show diagnostics in exercise editors.}
 
 \item{exercise.startover}{Show "Start Over" button on exercise.}
+
+\item{exercise.reveal_solution}{Whether to reveal the exercise solution if
+a solution chunk is provided.}
+}
+\value{
+Nothing. Invisibly sets \link[knitr:opts_chunk]{knitr::opts_chunk} settings.
 }
 \description{
 Set various tutorial options that control the display and evaluation of
 exercises.
+}
+\examples{
+if (interactive()) {
+  tutorial_options(exercise.eval = TRUE, exercise.timelimt = 10)
+}
+
 }

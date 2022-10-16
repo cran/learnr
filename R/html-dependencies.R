@@ -1,9 +1,12 @@
 
 #' Tutorial HTML dependency
 #'
-#' @details HTML dependency for core tutorial JS and CSS. This should be included as a
+#' HTML dependency for core tutorial JS and CSS. This should be included as a
 #' dependency for custom tutorial formats that wish to ensure that that
-#' tutorial.js and tutorial.css are loaded prior their own scripts and stylesheets.
+#' `tutorial.js` and `tutorial.css` are loaded prior their own scripts and
+#' stylesheets.
+#'
+#' @return \pkg{learnr}'s HTML dependencies
 #'
 #' @export
 tutorial_html_dependency <- function() {
@@ -12,28 +15,10 @@ tutorial_html_dependency <- function() {
     version = utils::packageVersion("learnr"),
     src = html_dependency_src("lib", "tutorial"),
     script = "tutorial.js",
-    stylesheet = "tutorial.css"
+    stylesheet = "tutorial.css",
+    all_files = TRUE
   )
 }
-
-tutorial_autocompletion_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "tutorial-autocompletion",
-    version = utils::packageVersion("learnr"),
-    src = html_dependency_src("lib", "tutorial"),
-    script = "tutorial-autocompletion.js"
-  )
-}
-
-tutorial_diagnostics_html_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "tutorial-diagnostics",
-    version = utils::packageVersion("learnr"),
-    src = html_dependency_src("lib", "tutorial"),
-    script = "tutorial-diagnostics.js"
-  )
-}
-
 
 html_dependency_src <- function(...) {
   if (nzchar(Sys.getenv("RMARKDOWN_SHINY_PRERENDERED_DEVMODE"))) {
@@ -59,7 +44,7 @@ idb_html_dependency <- function() {
 bootbox_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "bootbox",
-    version = "4.4.0",
+    version = "5.5.2",
     src = system.file("lib/bootbox", package = "learnr"),
     script = "bootbox.min.js"
   )
@@ -68,7 +53,7 @@ bootbox_html_dependency <- function() {
 clipboardjs_html_dependency <- function() {
   htmltools::htmlDependency(
     name = "clipboardjs",
-    version = "1.5.15",
+    version = "2.0.10",
     src = system.file("lib/clipboardjs", package = "learnr"),
     script = "clipboard.min.js"
   )
@@ -81,5 +66,24 @@ ace_html_dependency <- function() {
     version = ACE_VERSION,
     src = system.file("lib/ace", package = "learnr"),
     script = "ace.js"
+  )
+}
+
+tutorial_i18n_html_dependency <- function(language = NULL) {
+  htmltools::htmlDependency(
+    name = "i18n",
+    version = "21.6.10",
+    src = system.file("lib/i18n", package = "learnr"),
+    script = c("i18next.min.js", "tutorial-i18n-init.js"),
+    head = format(htmltools::tags$script(
+      id = "i18n-cstm-trns",
+      type = "application/json",
+      htmltools::HTML(
+        jsonlite::toJSON(
+          i18n_process_language_options(language),
+          auto_unbox = TRUE
+        )
+      )
+    ))
   )
 }

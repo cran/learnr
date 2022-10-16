@@ -25,7 +25,7 @@ register_http_handlers <- function(session, metadata) {
     )
 
     # Now that we've initialized the session state, emit the start event
-    session_start_event(session)
+    event_trigger(session, "session_start")
 
     session$userData$learnr_state("initialized")
     # return identifers
@@ -78,6 +78,9 @@ register_http_handlers <- function(session, metadata) {
 
   # event recording
   session$registerDataObj("record_event", NULL, rpc_handler(function(input) {
+    # Augment the data with the label
+    input$data$label <- input$label
+
     record_event(session = session,
                  event = input$event,
                  data = input$data)
@@ -110,10 +113,15 @@ register_http_handlers <- function(session, metadata) {
     total_time <- input$total_time
 
     # fire event
-    video_progress_event(session = session,
-                         video_url = video_url,
-                         time = time,
-                         total_time = total_time)
+    event_trigger(
+      session,
+      "video_progress",
+      data = list(
+        video_url  = video_url,
+        time       = time,
+        total_time = total_time
+      )
+    )
   }))
 
   # exercise skipped event
@@ -123,7 +131,11 @@ register_http_handlers <- function(session, metadata) {
     sectionId <- input$sectionId
 
     # fire event
-    section_skipped_event(session = session, sectionId = sectionId)
+    event_trigger(
+      session,
+      "section_skipped",
+      data = list(sectionId = sectionId)
+    )
 
   }))
 
@@ -165,63 +177,7 @@ register_http_handlers <- function(session, metadata) {
 
     Encoding(line) <- "UTF-8"
 
-    # set completion settings
-    options <- utils::rc.options()
-    utils::rc.options(package.suffix = "::",
-                      funarg.suffix = " = ",
-                      function.suffix = "(")
-    on.exit(do.call(utils::rc.options, as.list(options)), add = TRUE)
-
-    settings <- utils::rc.settings()
-    utils::rc.settings(ops = TRUE, ns = TRUE, args = TRUE, func = FALSE,
-                       ipck = TRUE, S3 = TRUE, data = TRUE, help = TRUE,
-                       argdb = TRUE, fuzzy = FALSE, files = TRUE, quotes = TRUE)
-    on.exit(do.call(utils::rc.settings, as.list(settings)), add = TRUE)
-
-    # temporarily attach global setup to search path
-    # for R completion engine
-    do.call("attach", list(server_envir, name = "tutorial:setup"))
-    on.exit(detach("tutorial:setup"), add = TRUE)
-
-    # temporarily attach environment state to search path
-    # for R completion engine
-    if (nzchar(label) && is.environment(state[[label]])) {
-      do.call("attach", list(state[[label]], name = "tutorial:state"))
-      on.exit(detach("tutorial:state"), add = TRUE)
-    }
-
-    completions <- character()
-    try(silent = TRUE, {
-      utils <- asNamespace("utils")
-      utils$.assignLinebuffer(line)
-      utils$.assignEnd(nchar(line))
-      utils$.guessTokenFromLine()
-      utils$.completeToken()
-      completions <- as.character(utils$.retrieveCompletions())
-    })
-
-    # detect functions
-    splat <- strsplit(completions, ":{2,3}")
-    fn <- vapply(splat, function(el) {
-      n <- length(el)
-      envir  <- if (n == 1) .GlobalEnv else asNamespace(el[[1]])
-      symbol <- if (n == 2) el[[2]] else el[[1]]
-      tryCatch(
-        is.function(get(symbol, envir = envir)),
-        error = function(e) FALSE
-      )
-    }, logical(1))
-
-    # remove a leading '::', ':::' from autocompletion results, as
-    # those won't be inserted as expected in Ace
-    completions <- gsub("[^:]+:{2,3}(.)", "\\1", completions)
-    completions <- completions[nzchar(completions)]
-
-    # zip together
-    result <- Map(list, completions, fn, USE.NAMES = FALSE)
-
-    # return completions
-    as.list(result)
+    auto_complete_r(line, label, state)
   }))
 
   # diagnostics handler

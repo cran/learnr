@@ -30,7 +30,7 @@ save_exercise_submission <- function(session, label, code, output, error_message
   # will just tickle the inputs to force re-execution of the outputs.
   storage <- tutorial_storage(session)
   if (identical(storage$type, "client")) {
-    if (!is.null(error_message))
+    if (!is.null(error_message) && !identical(error_message, ""))
       output <- error_message_html(error_message)
     else
       output <- NULL
@@ -212,8 +212,6 @@ update_object <- function(object) {
       # rename answers -> answer
       object$data$answer <- object$data$answers
       object$data$answers <- NULL
-      # do not record correct information
-      object$data$correct <- NULL
     }
   }
   object
@@ -279,6 +277,11 @@ tutorial_storage <- function(session) {
 
   # function to determine "auto" storage
   auto_storage <- function() {
+    if (getOption("shiny.testmode", default = FALSE)) {
+      # With shinytest, we don't want to restore state; start with a clean slate
+      # each time.
+      return(no_storage())
+    }
     location <- read_request(session, "tutorial.http_location")
     if (is_localhost(location))
       local_storage
@@ -323,10 +326,9 @@ tutorial_storage <- function(session) {
 
 #' Filesystem-based storage for tutor state data
 #'
-#' Tutorial state storage handler that uses the filesystem
-#' as a backing store. The directory will contain tutorial
-#' state data partitioned by user_id, tutorial_id, and
-#' tutorial_version (in that order)
+#' Tutorial state storage handler that uses the filesystem as a backing store.
+#' The directory will contain tutorial state data partitioned by `user_id`,
+#' `tutorial_id`, and `tutorial_version` (in that order)
 #'
 #' @param dir Directory to store state data within
 #' @param compress Should \code{.rds} files be compressed?
@@ -435,6 +437,8 @@ client_storage <- function(session) {
       # save the object to our in-memory store
       context_id <- tutorial_context_id(tutorial_id, tutorial_version)
       store <- object_store(context_id)
+      # scrub "answers" from the state stored on the client (client storage only)
+      data <- scrub_correct_and_feedback(data)
       assign(object_id, data, envir = store)
 
       # broadcast to client
@@ -492,4 +496,20 @@ no_storage <- function() {
     get_objects = function(tutorial_id, tutorial_version, user_id) { list() },
     remove_all_objects = function(tutorial_id, tutorial_version, user_id) {}
   )
+}
+
+scrub_correct_and_feedback <- function(data) {
+  if (is.null(data)) {
+    return(data)
+  }
+
+  if (identical(data$type, "question_submission")) {
+    data$data$correct <- NULL
+  }
+
+  if (identical(data$type, "exercise_submission")) {
+    data$data$feedback <- NULL
+  }
+
+  data
 }

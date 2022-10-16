@@ -4,32 +4,59 @@
 \alias{run_tutorial}
 \title{Run a tutorial}
 \usage{
-run_tutorial(name = NULL, package = NULL, shiny_args = NULL)
+run_tutorial(
+  name = NULL,
+  package = NULL,
+  ...,
+  shiny_args = NULL,
+  clean = FALSE,
+  as_rstudio_job = NULL
+)
 }
 \arguments{
-\item{name}{Tutorial name (subdirectory within \code{tutorials/}
-directory of installed package).}
+\item{name}{Tutorial name (subdirectory within \code{tutorials/} directory of
+installed \code{package}). Alternatively, if \code{package} is not provided, \code{name}
+may be a path to a local tutorial R Markdown file or a local directory
+containing a learnr tutorial. If \code{package} is provided, \code{name} must be the
+tutorial name.}
 
-\item{package}{Name of package}
+\item{package}{Name of package. If \code{name} is a path to the local directory
+containing a learnr tutorial, then \code{package} should not be provided.}
+
+\item{...}{Unused. Included for future expansion and to ensure named
+arguments are used.}
 
 \item{shiny_args}{Additional arguments to forward to
 \code{\link[shiny:runApp]{shiny::runApp}}.}
+
+\item{clean}{When \code{TRUE}, the shiny prerendered HTML files are removed and
+the tutorial is re-rendered prior to starting the tutorial.}
+
+\item{as_rstudio_job}{Runs the tutorial in the background as an RStudio job.
+This is the default behavior when \code{run_tutorial()} detects that RStudio is
+available and can run jobs. Set to \code{FALSE} to disable and to run the
+tutorial in the current R session.
+
+When running as an RStudio job, \code{run_tutorial()} sets or overrides the
+\code{launch.browser} option for \code{shiny_args}. You can instead use the
+\code{shiny.launch.browser} global option in your current R session to set
+the default behavior when the tutorial is run. See \link[shiny:shinyOptions]{the shiny options documentation} for more information.}
+}
+\value{
+Starts a Shiny server running the learnr tutorial.
 }
 \description{
-Run a tutorial which is contained within an R package.
-}
-\details{
-Note that when running a tutorial Rmd file with \code{run_tutorial}
-the tutorial Rmd should have already been rendered as part of the
-development of the package (i.e. the corresponding tutorial .html file for
-the .Rmd file must exist).
+Run a tutorial provided by an installed R package.
 }
 \examples{
 # display all "learnr" tutorials
 available_tutorials("learnr")
 
 # run basic example within learnr
-\dontrun{run_tutorial("hello", "learnr")}
+\dontrun{
+run_tutorial("hello", "learnr")
+}
+
 }
 \seealso{
 \code{\link{safe}} and \code{\link{available_tutorials}}

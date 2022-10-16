@@ -5,49 +5,30 @@
 
 #' Tutorial quiz questions
 #'
-#' Add interactive quiz questions to a tutorial.
-#' Each quiz question is executed within a shiny runtime to provide more flexibility in the types of questions offered.
-#' There are three default types of quiz questions:
+#' @description
+#' Add interactive quiz questions to a tutorial. Each quiz question is executed
+#' within a shiny runtime to provide more flexibility in the types of questions
+#' offered. There are four default types of quiz questions:
+#'
 #' \describe{
-#'   \item{\code{learnr_radio}}{Radio button question.  This question type will only allow for a single answer submission by the user.  An answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_checkbox}}{Check box question.  This question type will allow for one or more answers to be submitted by the user.  At least one answer must be marked for the user to submit their answer.}
-#'   \item{\code{learnr_text}}{Text box question.  This question type will allow for free form text to be submitted by the user.  At least one non-whitespace character must be added for the user to submit their answer.}
+#' \item{\code{learnr_radio}}{Radio button question.  This question type will
+#' only allow for a single answer submission by the user.  An answer must be
+#' marked for the user to submit their answer.}
+#' \item{\code{learnr_checkbox}}{Check box question.  This question type will
+#' allow for one or more answers to be submitted by the user.  At least one
+#' answer must be marked for the user to submit their answer.}
+#' \item{\code{learnr_text}}{Text box question.  This question type will allow
+#' for free form text to be submitted by the user.  At least one non-whitespace
+#' character must be added for the user to submit their answer.}
+#' \item{\code{learnr_numeric}}{Numeric question.  This question type will allow
+#' for a number to be submitted by the user.  At least one number must be added
+#' for the user to submit their answer.}
 #' }
 #'
-#' Note, the print behavior has changed as the runtime is now Shiny based.  If \code{question}s and \code{quiz}es are printed in the console, the S3 structure and information will be displayed.
+#' Note, the print behavior has changed as the runtime is now Shiny based.  If
+#' \code{question}s and \code{quiz}es are printed in the console, the S3
+#' structure and information will be displayed.
 #'
-#'
-#' @seealso For more information and question type extension examples, please see the help documentation for \code{\link[learnr]{question_methods}} and view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
-#' @param text Question or option text
-#' @param ... One or more questions or answers
-#' @param caption Optional quiz caption (defaults to "Quiz")
-#' @param type Type of quiz question. Typically this can be automatically determined
-#'   based on the provided answers. Pass \code{"radio"} to indicate that even though
-#'   multiple correct answers are specified that inputs which include only one correct
-#'   answer are still correct. Pass \code{"checkbox"} to force the use of checkboxes
-#'   (as opposed to radio buttons) even though only once correct answer was provided.
-#' @param correct For \code{question}, text to print for a correct answer (defaults
-#'   to "Correct!"). For \code{answer}, a boolean indicating whether this answer is
-#'   correct.
-#' @param incorrect Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{FALSE}.
-#' @param try_again Text to print for an incorrect answer (defaults to "Incorrect")
-#'   when \code{allow_retry} is \code{TRUE}.
-#' @param message Additional message to display along with correct/incorrect feedback.
-#'   This message is always displayed after a question submission.
-#' @param post_message Additional message to display along with correct/incorrect feedback.
-#'   If \code{allow_retry} is \code{TRUE}, this message will only be displayed after the
-#'   correct submission.  If \code{allow_retry} is \code{FALSE}, it will produce a second
-#'   message alongside the \code{message} message value.
-#' @param loading Loading text to display as a placeholder while the question is loaded
-#' @param submit_button Label for the submit button. Defaults to \code{"Submit Answer"}
-#' @param try_again_button Label for the try again button. Defaults to \code{"Submit Answer"}
-#' @param allow_retry Allow retry for incorrect answers. Defaults to \code{FALSE}.
-#' @param random_answer_order Display answers in a random order.
-#' @param options Extra options to be stored in the question object.
-# TODO-barret link to sortable_question when sortable is added
-# '   This is useful when using custom question types.
-# '   See sortable::sortable_question for an example question implementation that uses the \code{options} parameter.
 #'
 #' @examples
 #' quiz(
@@ -70,11 +51,54 @@
 #'   )
 #' )
 #'
+#' @param text Question or option text
+#' @param ... One or more questions or answers
+#' @param caption Optional quiz caption (defaults to "Quiz")
+#' @param type Type of quiz question. Typically this can be automatically
+#'   determined based on the provided answers. Pass `"radio"` to indicate that
+#'   even though multiple correct answers are specified that inputs which
+#'   include only one correct answer are still correct. Pass `"checkbox"` to
+#'   force the use of checkboxes (as opposed to radio buttons) even though only
+#'   once correct answer was provided.
+#' @param correct For `question`, text to print for a correct answer (defaults
+#'   to "Correct!"). For `answer`, a boolean indicating whether this answer is
+#'   correct.
+#' @param incorrect Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `FALSE`.
+#' @param try_again Text to print for an incorrect answer (defaults to
+#'   "Incorrect") when `allow_retry` is `TRUE`.
+#' @param message Additional message to display along with correct/incorrect
+#'   feedback. This message is always displayed after a question submission.
+#' @param post_message Additional message to display along with
+#'   correct/incorrect feedback. If `allow_retry` is `TRUE`, this
+#'   message will only be displayed after the correct submission.  If
+#'   `allow_retry` is `FALSE`, it will produce a second message
+#'   alongside the `message` message value.
+#' @param loading Loading text to display as a placeholder while the question is
+#'   loaded. If not provided, generic "Loading..." or placeholder elements will
+#'   be displayed.
+#' @param submit_button Label for the submit button. Defaults to `"Submit
+#'   Answer"`
+#' @param try_again_button Label for the try again button. Defaults to `"Submit
+#'   Answer"`
+#' @param allow_retry Allow retry for incorrect answers. Defaults to `FALSE`.
+#' @param random_answer_order Display answers in a random order.
+#' @param options Extra options to be stored in the question object. This is
+#'   useful when using custom question types. See [sortable::question_rank()]
+#'   for an example question implementation that uses the `options` parameter.
+#'
+#' @return A learnr quiz, or collection of questions.
+#'
+#' @family Interactive Questions
+#' @seealso [random_praise()], [random_encouragement()]
+#' @seealso For more information and question type extension examples, please
+#'   see the help documentation for [question_methods][question_ui_initialize()]
+#'   and view the \code{question_type} tutorial:
+#'   `learnr::run_tutorial("question_type", "learnr")`.
 #' @name quiz
-#' @seealso \code{\link{random_praise}}, \code{\link{random_encouragement}}
-#' @export
 #' @rdname quiz
-quiz <- function(..., caption = "Quiz") {
+#' @export
+quiz <- function(..., caption = rlang::missing_arg()) {
 
   # create table rows from questions
   index <- 1
@@ -89,10 +113,14 @@ quiz <- function(..., caption = "Quiz") {
     question
   })
 
-  ret <- list(
-    caption = if(!is.null(caption)) quiz_text(caption),
-    questions = questions
-  )
+  caption <-
+    if (rlang::is_missing(caption)) {
+      i18n_span("text.quiz", "Quiz")
+    } else if (!is.null(caption)) {
+      quiz_text(caption)
+    }
+
+  ret <- list(caption = caption, questions = questions)
   class(ret) <- "tutorial_quiz"
   ret
 }
@@ -101,22 +129,22 @@ quiz <- function(..., caption = "Quiz") {
 #' @rdname quiz
 #' @import shiny
 #' @export
-question <- function(text,
-                     ...,
-                     type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text"),
-                     correct = "Correct!",
-                     incorrect = "Incorrect",
-                     try_again = incorrect,
-                     message = NULL,
-                     post_message = NULL,
-                     loading = c("**Loading:** ", text, "<br/><br/><br/>"),
-                     submit_button = "Submit Answer",
-                     try_again_button = "Try Again",
-                     allow_retry = FALSE,
-                     random_answer_order = FALSE,
-                     options = list()
-                   ) {
-
+question <- function(
+    text,
+    ...,
+    type = c("auto", "single", "multiple", "learnr_radio", "learnr_checkbox", "learnr_text", "learnr_numeric"),
+    correct = "Correct!",
+    incorrect = "Incorrect",
+    try_again = incorrect,
+    message = NULL,
+    post_message = NULL,
+    loading = NULL,
+    submit_button = rlang::missing_arg(),
+    try_again_button = rlang::missing_arg(),
+    allow_retry = FALSE,
+    random_answer_order = FALSE,
+    options = list()
+) {
 
   # one time tutor initialization
   initialize_tutorial()
@@ -131,16 +159,16 @@ question <- function(text,
   # verify chunk label if necessary
   verify_tutorial_chunk_label()
 
-  total_correct <- sum(vapply(answers, function(ans) { ans$correct }, logical(1)))
-  if (total_correct == 0) {
-    stop("At least one correct answer must be supplied")
-  }
+  # count total correct answers to decide between radio/checkbox
+  answers_split <- answers_split_type(answers)
+  total_correct <- sum(vapply(answers_split[["literal"]], `[[`, logical(1), "correct"))
 
-  ## no partial matching for s3 methods
-  if (missing(type)) { # can not use match.arg(type) because of comment above
+  # determine or resolve question type
+  if (missing(type)) {
+    # no partial matching for s3 methods means we can't use match.arg()
     type <- "auto"
   }
-  if (isTRUE(all.equal(type, "auto"))) {
+  if (identical(type, "auto")) {
     if (total_correct > 1) {
       type <- "learnr_checkbox"
     } else {
@@ -158,9 +186,30 @@ question <- function(text,
     )
   }
 
+  # ensure we have at least one correct answer, if required
+  must_have_correct <- identical(type, "learnr_radio") || is.null(answers_split[["function"]])
+  if (must_have_correct && total_correct == 0) {
+    stop("At least one correct answer must be supplied")
+  }
+
   # can not guarantee that `label` exists
   label <- knitr::opts_current$get('label')
   q_id <- label %||% random_question_id()
+
+  # i18nize button labels if default values are used
+  submit_button <-
+    if (rlang::is_missing(submit_button)) {
+      i18n_span("button.questionsubmit", "Submit Answer")
+    } else {
+      quiz_text(submit_button)
+    }
+
+  try_again_button <-
+    if (rlang::is_missing(try_again_button)) {
+      i18n_span("button.questiontryagain", "Try Again")
+    } else {
+      quiz_text(try_again_button)
+    }
 
   ret <- list(
     type = type,
@@ -168,8 +217,8 @@ question <- function(text,
     question = quiz_text(text),
     answers = answers,
     button_labels = list(
-      submit = quiz_text(submit_button),
-      try_again = quiz_text(try_again_button)
+      submit = submit_button,
+      try_again = try_again_button
     ),
     messages = list(
       correct = quiz_text(correct),
@@ -182,7 +231,7 @@ question <- function(text,
       answer = NS(q_id)("answer"),
       question = q_id
     ),
-    loading = quiz_text(loading),
+    loading = if (!is.null(loading)) quiz_text(loading),
     random_answer_order = random_answer_order,
     allow_retry = allow_retry,
     # Set a seed for local testing, even though it is overwritten for each shiny session
@@ -193,37 +242,15 @@ question <- function(text,
   ret
 }
 
-#' @rdname quiz
-#' @export
-answer <- function(text, correct = FALSE, message = NULL) {
-  if (!is_tags(message)) {
-    checkmate::assert_character(message, len = 1, null.ok = TRUE, any.missing = FALSE)
-  }
-
-  ret <- list(
-    id = random_answer_id(),
-    option = as.character(text), # character representation
-    value = text, # actual value
-    label = quiz_text(text), # md presentation
-    correct = isTRUE(correct),
-    message = quiz_text(message)
-  )
-  class(ret) <- c(
-    "tutorial_question_answer", # new an improved name
-    "tutorial_quiz_answer" # legacy. Want to remove
-  )
-  ret
-}
-
 # render markdown (including equations) for quiz_text
 quiz_text <- function(text) {
-  if (inherits(text, "html")) {
-    return(text)
-  }
-  if (is_tags(text)) {
+  if (is_html_chr(text) || is_html_tag(text)) {
     return(text)
   }
   if (!is.null(text)) {
+    if (!is.character(text)) {
+      text <- format(text)
+    }
     # convert markdown
     md <- markdown::markdownToHTML(
       text = text,
@@ -232,9 +259,11 @@ quiz_text <- function(text) {
       fragment.only = TRUE,
       encoding = "UTF-8"
     )
-    # remove leading and trailing paragraph
-    md <- sub("^<p>", "", md)
-    md <- sub("</p>\n?$", "", md)
+    if (length(str_match_all(md, "</p>", fixed = TRUE)) == 1) {
+      # remove leading and trailing paragraph
+      md <- sub("^<p>", "", md)
+      md <- sub("</p>\n?$", "", md)
+    }
     HTML(md)
   }
   else {
@@ -242,17 +271,12 @@ quiz_text <- function(text) {
   }
 }
 
-
+random_id <- function(txt) {
+  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
+}
 
 random_question_id <- function() {
   random_id("lnr_ques")
-}
-random_answer_id <- function() {
-  random_id("lnr_ans")
-}
-#' @importFrom stats runif
-random_id <- function(txt) {
-  paste0(txt, "_", as.hexmode(floor(runif(1, 1, 16^7))))
 }
 
 random_seed <- function() {
@@ -263,14 +287,16 @@ shuffle <- function(x) {
   sample(x, length(x))
 }
 
-
 #' Knitr quiz print methods
 #'
-#' \code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and \code{\link{quiz}}
+#' \code{knitr::\link[knitr]{knit_print}} methods for \code{\link{question}} and
+#' \code{\link{quiz}}
+#'
 #' @inheritParams knitr::knit_print
-#' @export
+#'
 #' @importFrom knitr knit_print
 #' @method knit_print tutorial_question
+#' @export
 #' @rdname knit_print
 knit_print.tutorial_question <- function(x, ...) {
   question <- x
@@ -281,7 +307,7 @@ knit_print.tutorial_question <- function(x, ...) {
   rmarkdown::shiny_prerendered_chunk(
     'server',
     sprintf(
-      'learnr:::question_prerendered_chunk(%s)',
+      'learnr:::question_prerendered_chunk(%s, session = session)',
       dput_to_string(question)
     )
   )
@@ -289,6 +315,7 @@ knit_print.tutorial_question <- function(x, ...) {
   # regular knit print the UI
   knitr::knit_print(ui)
 }
+
 #' @method knit_print tutorial_quiz
 #' @export
 #' @rdname knit_print
@@ -330,19 +357,29 @@ retrieve_question_submission_answer <- function(session, question_label) {
 
 
 
-question_prerendered_chunk <- function(question, ...) {
-  callModule(
-    question_module_server,
-    question$ids$question,
-    question = question
-  )
-  invisible(TRUE)
+question_prerendered_chunk <- function(question, ..., session = getDefaultReactiveDomain()) {
+  store_question_cache(question)
+
+  question_state <-
+    callModule(
+      question_module_server,
+      question$ids$question,
+      question = question,
+      session = session
+    )
+
+  observe({
+    req(question_state())
+    set_tutorial_state(question$label, question_state(), session = session)
+  })
+
+  question_state
 }
 
 question_module_ui <- function(id) {
   ns <- NS(id)
   div(
-    class = "panel panel-default",
+    class = "panel panel-default tutorial-question-container",
     div(
       "data-label" = as.character(id),
       class = "tutorial-question panel-body",
@@ -359,20 +396,33 @@ question_module_server <- function(
   question
 ) {
 
-  output$answer_container <- renderUI({ div(class="loading", question$loading) })
+  output$answer_container <- renderUI({
+    if (is.null(question$loading)) {
+      question_ui_loading(question)
+    } else {
+      div(
+        class="loading",
+        question$loading
+      )
+    }
+  })
+
+  # Setup reactive here that will be updated by the question modules
+  question_state <- reactiveVal()
 
   observeEvent(
     req(session$userData$learnr_state() == "restored"),
     once = TRUE,
-    {
-      question_module_server_impl(input, output, session, question)
-    }
+    question_module_server_impl(input, output, session, question, question_state)
   )
+
+  question_state
 }
 
 question_module_server_impl <- function(
   input, output, session,
-  question
+  question,
+  question_state = NULL
 ) {
 
   ns <- getDefaultReactiveDomain()$ns
@@ -438,7 +488,9 @@ question_module_server_impl <- function(
 
   init_question <- function(restoreValue = NULL) {
     if (question$random_answer_order) {
-      question$answers <<- shuffle(question$answers)
+      # Shuffle visible answer options (i.e. static, non-function answers)
+      is_visible_option <- !answer_type_is_function(question$answers)
+      question$answers[is_visible_option] <<- shuffle(question$answers[is_visible_option])
     }
     submitted_answer(restoreValue)
   }
@@ -524,10 +576,13 @@ question_module_server_impl <- function(
       submitted_answer(NULL)
 
       # submit "reset" to server
-      reset_question_submission_event(
-        session = session,
-        label = as.character(question$label),
-        question = as.character(question$question)
+      event_trigger(
+        session,
+        "reset_question_submission",
+        data = list(
+          label    = as.character(question$label),
+          question = as.character(question$question)
+        )
       )
       return()
     }
@@ -535,14 +590,28 @@ question_module_server_impl <- function(
     submitted_answer(input$answer)
 
     # submit question to server
-    question_submission_event(
+    event_trigger(
       session = session,
-      label = as.character(question$label),
-      question = as.character(question$question),
-      answer = as.character(input$answer),
-      correct = is_correct_info()$correct
+      event   = "question_submission",
+      data    = list(
+        label    = as.character(question$label),
+        question = as.character(question$question),
+        answer   = as.character(input$answer),
+        correct  = is_correct_info()$correct
+      )
     )
 
+  })
+
+  observe({
+    # Update the `question_state()` reactive to report state back to the Shiny session
+    req(submitted_answer(), is.reactive(question_state))
+    current_answer_state <- list(
+      type = "question",
+      answer = submitted_answer(),
+      correct = is_correct_info()$correct
+    )
+    question_state(current_answer_state)
   })
 }
 
@@ -550,6 +619,12 @@ question_module_server_impl <- function(
 
 question_button_label <- function(question, label_type = "submit", is_valid = TRUE) {
   label_type <- match.arg(label_type, c("submit", "try_again", "correct", "incorrect"))
+
+  if (label_type %in% c("correct", "incorrect")) {
+    # No button when answer is correct or incorrect (wrong without try again)
+    return(NULL)
+  }
+
   button_label <- question$button_labels[[label_type]]
   is_valid <- isTRUE(is_valid)
 
@@ -559,25 +634,26 @@ question_button_label <- function(question, label_type = "submit", is_valid = TR
   action_button_id <- NS(question$ids$question)("action_button")
 
   if (label_type == "submit") {
-    button <- actionButton(action_button_id, button_label, class = default_class)
+    button <- actionButton(
+      action_button_id, button_label,
+      class = default_class
+    )
     if (!is_valid) {
       button <- disable_all_tags(button)
     }
     button
   } else if (label_type == "try_again") {
     mutate_tags(
-      actionButton(action_button_id, button_label, class = warning_class),
+      actionButton(
+        action_button_id, button_label,
+        class = warning_class
+      ),
       paste0("#", action_button_id),
       function(ele) {
         ele$attribs$class <- str_remove(ele$attribs$class, "\\s+btn-default")
         ele
       }
     )
-  } else if (
-    label_type == "correct" ||
-    label_type == "incorrect"
-  ) {
-    NULL
   }
 }
 
@@ -659,11 +735,45 @@ question_messages <- function(question, messages, is_correct, is_done) {
   )) {
     NULL
   } else {
-    tags$div(message_alert, always_message_alert, post_alert)
+    htmltools::tagList(message_alert, always_message_alert, post_alert)
   }
 }
 
+question_ui_loading <- function(question) {
+  prompt <- format(question$question)
+  n_paragraphs <- max(length(str_match_all(prompt, "</p>")), 1)
+  paras <- lapply(seq_len(n_paragraphs), function(...) {
+    spans <- lapply(seq_len(sample(2:4, 1)), function(...) {
+      htmltools::span(class = sprintf("placeholder col-%s", sample(2:7, 1)))
+    })
+    htmltools::p(spans)
+  })
 
+  q_opts <- NULL
+  if (length(intersect(question$type, c("learnr_radio", "learnr_checkbox"))) > 0) {
+    q_opts <- htmltools::tags$ul(
+      lapply(seq_along(question$answers), function(...) {
+        htmltools::tags$li(
+          htmltools::span(class = "placeholder col-3")
+        )
+      })
+    )
+  }
+
+  button <- htmltools::tags$a(
+    href = "#",
+    tabindex = "-1",
+    class = "btn btn-primary disabled placeholder col-3",
+    `aria-hidden` = "true"
+  )
+
+  htmltools::div(
+    class = "loading placeholder-glow",
+    paras,
+    q_opts,
+    button
+  )
+}
 
 
 

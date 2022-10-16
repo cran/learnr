@@ -11,7 +11,7 @@
 \alias{question_ui_completed.default}
 \alias{question_is_valid.default}
 \alias{question_is_correct.default}
-\title{Custom question methods.}
+\title{Custom question methods}
 \usage{
 question_ui_initialize(question, value, ...)
 
@@ -40,6 +40,9 @@ question_is_correct(question, value, ...)
 
 \item{...}{future parameter expansion and custom arguments to be used in dispatched s3 methods.}
 }
+\value{
+learnr question objects, UI elements, results or server methods.
+}
 \description{
 There are five methods used to define a custom question.  Each S3 method
 should correspond to the \code{type = TYPE} supplied to the question.
@@ -66,6 +69,19 @@ should correspond to the \code{type = TYPE} supplied to the question.
 }
 }
 }
+\examples{
+q <- question(
+  "Which package helps you teach programming skills?",
+  answer("dplyr"),
+  answer("learnr", correct = TRUE),
+  answer("base")
+)
+question_is_correct(q, "dplyr")
+question_is_correct(q, "learnr")
+
+}
 \seealso{
-For more information and question type extension examples, please view the \code{question_type} tutorial: \code{learnr::run_tutorial("question_type", "learnr")}.
+For more information and question type extension examples, please
+see the \strong{Custom Question Types} section of the \code{quiz_question} tutorial:
+\code{learnr::run_tutorial("quiz_question", "learnr")}.
 }

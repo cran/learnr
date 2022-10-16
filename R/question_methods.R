@@ -1,5 +1,4 @@
-#' Custom question methods.
-#'
+#' Custom question methods
 #'
 #' @description
 #' There are five methods used to define a custom question.  Each S3 method
@@ -25,15 +24,26 @@
 #'
 #'     - Determines how the question is displayed to the users while  the "Try again" screen is displayed.  Usually this function will disable inputs to the question, i.e. prevent the student from changing the answer options. Similar to `question_ui_initialize`, this should should return a shiny UI object that can be displayed using [shiny::renderUI].
 #'
-#'
-#'
+#' @examples
+#' q <- question(
+#'   "Which package helps you teach programming skills?",
+#'   answer("dplyr"),
+#'   answer("learnr", correct = TRUE),
+#'   answer("base")
+#' )
+#' question_is_correct(q, "dplyr")
+#' question_is_correct(q, "learnr")
 #'
 #' @param question [question] object used
 #' @param value user input value
 #' @param ... future parameter expansion and custom arguments to be used in dispatched s3 methods.
-#' @export
-#' @seealso For more information and question type extension examples, please view the `question_type` tutorial: `learnr::run_tutorial("question_type", "learnr")`.
 #'
+#' @return learnr question objects, UI elements, results or server methods.
+#'
+#' @seealso For more information and question type extension examples, please
+#'   see the **Custom Question Types** section of the `quiz_question` tutorial:
+#'   `learnr::run_tutorial("quiz_question", "learnr")`.
+#' @export
 #' @rdname question_methods
 question_ui_initialize <- function(question, value, ...) {
   UseMethod("question_ui_initialize", question)
@@ -88,7 +98,7 @@ question_ui_try_again.default <- function(question, value, ...) {
 #' @export
 #' @rdname question_methods
 question_ui_completed.default <- function(question, value, ...) {
-  disable_all_tags(
+  finalize_question(
     question_ui_initialize(question, value, ...)
   )
 }
@@ -101,62 +111,4 @@ question_is_valid.default <- function(question, value, ...) {
 #' @rdname question_methods
 question_is_correct.default <- function(question, value, ...) {
   question_stop("question_is_correct", question)
-}
-
-
-#' Question is correct value
-#'
-#' Helper method to return
-#' @param correct boolean that determines if a question answer is correct
-#' @param messages a vector of messages to be displayed.  The type of message will be determined by the `correct` value.
-#' @rdname mark_as_correct_incorrect
-#' @export
-#' @examples
-#' # Radio button question implementation of `question_is_correct`
-#' question_is_correct.radio <- function(question, value, ...) {
-#'   for (ans in question$answers) {
-#'     if (as.character(ans$option) == value) {
-#'       return(mark_as(
-#'         ans$correct,
-#'         ans$message
-#'       ))
-#'     }
-#'   }
-#'   mark_as(FALSE, NULL)
-#' }
-correct <- function(messages = NULL) {
-  mark_as(correct = TRUE, messages = messages)
-}
-#' @rdname mark_as_correct_incorrect
-#' @export
-incorrect <- function(messages = NULL) {
-  mark_as(correct = FALSE, messages = messages)
-}
-#' @rdname mark_as_correct_incorrect
-#' @export
-mark_as <- function(correct, messages = NULL) {
-  checkmate::assert_logical(correct, len = 1, null.ok = FALSE, any.missing = FALSE)
-  ret <- list(
-    correct = correct,
-    messages = messages
-  )
-  class(ret) <- "learnr_mark_as"
-  ret
-}
-
-
-
-answer_labels <- function(question) {
-  lapply(question$answers, `[[`, "label")
-}
-answer_values <- function(question) {
-  ret <- lapply(
-    # return the character string input.  This _should_ be unique
-    lapply(question$answers, `[[`, "option"),
-    as.character
-  )
-  if (length(unlist(unique(ret))) != length(ret)) {
-    stop("Answer `option` values are not unique.  Unique values are required")
-  }
-  ret
 }
