@@ -1,6 +1,6 @@
-8c0daa94ef931880f8909f925a988cae *DESCRIPTION
-918f66668eaa65b195763070297ba876 *NAMESPACE
-eb16f00c915cf3c33e73f91261f9756c *NEWS.md
+e96ac417c8726d619b34743bdf87c534 *DESCRIPTION
+0167e8348f6fe2f4e17179b830f2b12a *NAMESPACE
+5147368036ecb634ede40c5726e8896a *NEWS.md
 89ebe33b859d8498748ea179f16d2d27 *R/ace.R
 0d00af2c8824ac508084ca275768fee3 *R/auto-complete.R
 f460bf2643c4f6cdc65d02c3c4dca5eb *R/available_tutorials.R
@@ -10,7 +10,7 @@ eea969858ac6d7a963eb0b605e8ead1a *R/evaluators.R
 5a54c3de152f4fd3815fe659942bc945 *R/events.R
 7c6ead1ac65dc33cec11e37cbe0d8225 *R/events_default.R
 bc102434108c15498f853cdb02256935 *R/events_record.R
-25879b999c7469d5ec9a4a7abbfbea79 *R/exercise.R
+8f0ba67df08374a52135bd32329a60c1 *R/exercise.R
 d7bfcadba646d661ab2b5e1b25de7ca6 *R/feedback.R
 79f6741f0d8ba2eb47dbb84c959f9159 *R/html-dependencies.R
 4dc400a574327d21e3e7fb34fbf516a7 *R/html_selector.R
@@ -19,7 +19,7 @@ ecb767d0f6428f0d0e3c2721d6888c34 *R/i18n.R
 d8e30a7fc6ac940fabfa852cc9a64764 *R/identifiers.R
 809db4b39a24a2423f29958336e4b239 *R/initialize.R
 2431dea0b8965414d944976e4d28f8e1 *R/knitr-hooks.R
-0287b9377883bcabbeb5f1a89b2fbb9f *R/learnr-package.R
+f7abb0e1bca78c2ceba0e72ebf3ad786 *R/learnr-package.R
 a7535adaea605a961a29a70e3aa359bf *R/learnr_messages.R
 0068f2b0d981967bf6eb2c171738f401 *R/mock_exercise.R
 1450b92f80cb109679d229cbf98ee12c *R/mutate_tags.R
@@ -31,7 +31,7 @@ cc6f793bba84f42e6666d11d0197705d *R/question_methods.R
 584d8ceccd979bab94e3a75f5465e216 *R/question_numeric.R
 439ce061ad5cfb750498f563d270bdb2 *R/question_radio.R
 ca445a85392755554f6d23e5f9d76a22 *R/question_text.R
-9e679b77276451fbd87935057ca21a5b *R/quiz.R
+916194c7bb53d4a3a609834e1c63f15c *R/quiz.R
 01226c8837a292e06a95f415953a627d *R/quiz_print.R
 9ca73eb1241ba66b9c0af7a73da483fb *R/run.R
 fcf883aff64e43ed807953885465e367 *R/shinytest.R
@@ -42,13 +42,13 @@ f08c118c90a5ba41b91ab6ea501e79ff *R/tutorial-state.R
 2a2eadce278cdcd9b1d4a4eef0b209c6 *R/tutorial_package_dependencies.R
 d30d6ad8651677d464266ab5ce4b2d66 *R/utils.R
 953fce3f23a67c2d6627d66963f3658b *R/zzz.R
-1396a01e06f0f3211a2deebaf2e60b1b *build/vignette.rds
+ff93e805605e6cb450ccacc80acea9e6 *build/vignette.rds
 8ce157522956b764a62b332f842e67c4 *inst/doc/multilang.R
 f9da9d7edabfffc192b1be3cbe5ad1bb *inst/doc/multilang.Rmd
 8f241aa20353c324f782ac24194ff297 *inst/doc/multilang.html
 c0df04842a9c9313f615ff08b38dc3e2 *inst/doc/shinyapps-publishing.R
-7c7f25b66708e5c1f14c1a2cfaaced88 *inst/doc/shinyapps-publishing.Rmd
-7520808bb1314c1a458d36261c89815c *inst/doc/shinyapps-publishing.html
+04e606feaab633faee77a1c4f706e9aa *inst/doc/shinyapps-publishing.Rmd
+444cf21c052763da7e1e03ba307d6db6 *inst/doc/shinyapps-publishing.html
 d2c1f102d4857cd0b84735c16432748f *inst/examples/apparmor/apparmor_evaluator.R
 3600b5079ca0ae1bc56992ce8a3115e3 *inst/examples/external/evaluator-tests.Rmd
 3f68aedbbb3e8592a6bfb58cb582b316 *inst/internals/i18n_random_phrases.rds
@@ -135,8 +135,8 @@ ab5d206e499c51c32f8b788540bfc435 *man/quiz.Rd
 038f4f89e1073834c4bf06cc3c4e03f5 *man/rmd-fragments/badges.Rmd
 58a213a41bb2941daf988cc0c66d4ddb *man/rmd-fragments/hello-tutorial.Rmd
 afd4a9db6dd8521e09b5ec9450ce04d8 *man/rmd-fragments/learnr-examples-showcase.Rmd
-17e4c4a4c25bca0649f135e1c676e7a5 *man/rmd-fragments/learnr-install.Rmd
-e9f86da90994e3045b31d5b7713c8a60 *man/rmd-fragments/learnr-overview.Rmd
+22cc35b5b21fd12e3e41a66a5d4c4f79 *man/rmd-fragments/learnr-install.Rmd
+447294b649c8bc79df7aa589dda69c1c *man/rmd-fragments/learnr-overview.Rmd
 90370205a3ddf78423dc90b5ead85bb5 *man/run_tutorial.Rd
 86e5873af2d2c6fd79614ed05d127a7c *man/safe.Rd
 06cd336bc77e41d8b5be7e681a68f0c9 *man/safe_env.Rd
@@ -166,7 +166,7 @@ d4aadb5e7e67fbb1b37824b3b22ed480 *tests/testthat/test-cookies.R
 570a75e21e61cfb05b9e55e84dcd0240 *tests/testthat/test-duplicate_env.R
 87ff68ef90596e8e78514bcdd9f5804f *tests/testthat/test-evaluators.R
 332604346a39ac884a211a82e45e10a9 *tests/testthat/test-events.R
-c0f582b10a9b83230f49f47a63221612 *tests/testthat/test-exercise.R
+e8f1a6e32598a0817cbb36822b570358 *tests/testthat/test-exercise.R
 958143aabce1a3fe1a15fcc07dd6adb4 *tests/testthat/test-feedback.R
 cca40ca4ebf14e6eb46c69c81ef07910 *tests/testthat/test-i18n.R
 2367612d9a1d5218164021d429bbef05 *tests/testthat/test-install-dependencies.R
@@ -190,16 +190,10 @@ a4a0723c0151a6804a58a863b2237d3e *tests/testthat/test-shinytest2-hints.R
 6170be0f75b941fd1c56e217776fc843 *tests/testthat/test-tutorial-format.R
 61eb25afc02ef50f4a53405dcee50faa *tests/testthat/test-tutorial-state.R
 d49e76850d7729170330d68b97960b7d *tests/testthat/tutorials/basic.Rmd
-2d0f88b0d4d8bd77b9fdc3175ed0df7b *tests/testthat/tutorials/basic.html
 720d2c39f48ff7e60295c70f45bcaefa *tests/testthat/tutorials/hint-copy/hint-copy.Rmd
-39ba3afb274bd1087e46c219366d8323 *tests/testthat/tutorials/hint-copy/hint-copy.html
 518f146697835ef18b043557937be657 *tests/testthat/tutorials/hint-div/hint-div.Rmd
-4ee47a1688c50fe70bdba6a98b72d679 *tests/testthat/tutorials/hint-div/hint-div.html
-5703c2c8bb62ce5954bcc938bfc5c812 *tests/testthat/tutorials/hint-div/hint-next.html
 a8e8b983b97d27bf59583841071599c0 *tests/testthat/tutorials/hint-next/hint-next.Rmd
-434b84607debdb122112389eb0da22c6 *tests/testthat/tutorials/hint-next/hint-next.html
 bde7a314eeea8fc1a63be6bb1db6faf2 *tests/testthat/tutorials/knitr-hooks_empty-exercise/duplicate-label.Rmd
-733b835ad05fd4607eebd5d97f07085b *tests/testthat/tutorials/knitr-hooks_empty-exercise/duplicate-label.html
 03c496c602fa66766ee1252b2d7f4d5c *tests/testthat/tutorials/knitr-hooks_empty-exercise/empty-exercise.Rmd
 df5268e3908f0ab3f1a9593cf0e3c999 *tests/testthat/tutorials/knitr-hooks_empty-exercise/full-exercise.Rmd
 3e97f49a70cab2fa243bf7c1a811c42d *tests/testthat/tutorials/missing-exercise-checker.Rmd
@@ -209,4 +203,4 @@ b87c0029073ab2b976c8e806b29a576d *vignettes/img/shinyapps-publishing-instance-si
 d92915421de1e000dcbeeda0e341779c *vignettes/img/shinyapps-publishing-instances.png
 356fa47004cde5eb63ca31cfb5f9ea09 *vignettes/img/shinyapps-publishing-metrics.png
 f9da9d7edabfffc192b1be3cbe5ad1bb *vignettes/multilang.Rmd
-7c7f25b66708e5c1f14c1a2cfaaced88 *vignettes/shinyapps-publishing.Rmd
+04e606feaab633faee77a1c4f706e9aa *vignettes/shinyapps-publishing.Rmd

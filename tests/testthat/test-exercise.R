@@ -501,6 +501,16 @@ test_that("exercise_result() turns length-0 html_output into NULL", {
   expect_null(exercise_result(html_output = list())$html_output)
 })
 
+test_that("exercise_result() doesn't drop html dependencies from `html_output`", {
+  html_output <- htmltools::attachDependencies(
+    htmltools::HTML("<p>A basic paragraph.</p>"),
+    clipboardjs_html_dependency()
+  )
+  res <- exercise_result(html_output = html_output)
+  expect_equal(as.character(res$html_output), as.character(html_output))
+  expect_equal(htmltools::htmlDependencies(res$html_output), list(clipboardjs_html_dependency()))
+})
+
 test_that("exercise_result_as_html() creates html for learnr", {
   expect_null(exercise_result_as_html("nope"))
   expect_null(exercise_result_as_html(list()))
@@ -1212,12 +1222,20 @@ test_that("evaluate_exercise() returns message for unparsable non-ASCII code", {
 
 test_that("evaluate_exercise() does not return a message for parsable non-ASCII code", {
   skip_if_not_pandoc("1.14")
-  skip_on_os("windows")
 
-  # Greek variable name and interrobang in character string
+  # Non-ASCII text in character string
+  ex <- mock_exercise(user_code = 'x <- "What\u203d"')
+  result <- evaluate_exercise(ex, new.env())
+  expect_null(result$feedback)
+
+  skip_on_os("windows")
+  # Skip if OS does not support UTF-8
+  skip_if(!isTRUE(l10n_info()[["UTF-8"]]))
+
+  # Non-ASCII variable name
   ex <- mock_exercise(
     user_code =
-      '\u03bc\u03b5\u03c4\u03b1\u03b2\u03bb\u03b7\u03c4\u03ae <- "What\u203d"'
+      '\u03bc\u03b5\u03c4\u03b1\u03b2\u03bb\u03b7\u03c4\u03ae <- "What?"'
   )
   result <- evaluate_exercise(ex, new.env())
   expect_null(result$feedback)
