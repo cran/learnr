@@ -6,9 +6,9 @@ knitr::opts_chunk$set(
 
 ## Language codes and names borrowed from BootBox
 # library(rvest)
-# read_html("http://bootboxjs.com/documentation.html#bb-locales") %>% 
-#   html_table() %>% 
-#   .[[6]] %>% 
+# read_html("https://bootboxjs.com/v5.x/documentation.html") %>%
+#   html_table() %>%
+#   .[[6]] %>%
 #   {dplyr::bind_rows(.[, 1:2], .[, 3:4])}
 
 languages <- c("Arabic","Bulgarian","Czech",
