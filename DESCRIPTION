@@ -1,7 +1,7 @@
 Type: Package
 Package: learnr
 Title: Interactive Tutorials for R
-Version: 0.11.4
+Version: 0.11.5
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7111-0077")),
@@ -49,7 +49,7 @@ Encoding: UTF-8
 RoxygenNote: 7.2.3
 SystemRequirements: pandoc (>= 1.14) - http://pandoc.org
 NeedsCompilation: no
-Packaged: 2023-05-24 21:13:08 UTC; garrick
+Packaged: 2023-09-27 23:31:22 UTC; garrick
 Author: Garrick Aden-Buie [aut, cre] (<https://orcid.org/0000-0002-7111-0077>),
   Barret Schloerke [aut] (<https://orcid.org/0000-0001-9986-114X>),
   JJ Allaire [aut, ccp],
@@ -64,4 +64,4 @@ Author: Garrick Aden-Buie [aut, cre] (<https://orcid.org/0000-0002-7111-0077>),
   i18next authors [ctb, cph] (i18next library)
 Maintainer: Garrick Aden-Buie <garrick@posit.co>
 Repository: CRAN
-Date/Publication: 2023-05-24 22:20:02 UTC
+Date/Publication: 2023-09-28 05:00:02 UTC

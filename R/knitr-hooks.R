@@ -245,6 +245,8 @@ tutorial_knitr_options <- function() {
 
   # hook to turn off evaluation/highlighting for exercise related chunks
   tutorial_opts_hook <-  function(options) {
+    # ensure label is an unnamed string (yihui/knitr#2280)
+    options$label <- unname(options$label)
 
     # check for chunk type
     exercise_chunk <- is_exercise_chunk(options)
@@ -372,12 +374,16 @@ tutorial_knitr_options <- function() {
         completion  <- as.numeric(options$exercise.completion %||% 1 > 0)
         diagnostics <- as.numeric(options$exercise.diagnostics %||% 1 > 0)
         startover <- as.numeric(options$exercise.startover %||% 1 > 0)
-        paste0('<div class="tutorial-', class,
-               '" data-label="', options$label,
-               '" data-completion="', completion,
-               '" data-diagnostics="', diagnostics,
-               '" data-startover="', startover,
-               '" data-lines="', lines, '">')
+        paste0(
+          '<div class="tutorial-', class,
+          '" data-label="', options$label,
+          '" data-completion="', completion,
+          '" data-diagnostics="', diagnostics,
+          '" data-startover="', startover,
+          '" data-lines="', lines,
+          '" data-pipe="', htmltools::htmlEscape(exercise_option_pipe(options)),
+          '">'
+        )
       }
       # after exercise
       else {
@@ -572,4 +578,12 @@ verify_tutorial_chunk_label <- function() {
       call. = FALSE
     )
   }
+}
+
+exercise_option_pipe <- function(options = knitr::opts_chunk$get()) {
+  if (!is.null(options[["exercise.pipe"]])) {
+    return(options[["exercise.pipe"]])
+  }
+
+  if (getRversion() < "4.1.0") "%>%" else "|>"
 }
