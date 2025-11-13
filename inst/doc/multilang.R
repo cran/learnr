@@ -49,33 +49,36 @@ bb_langs_code <- paste0("`", names(languages), "`")
 ## ----echo=FALSE, results="asis"-----------------------------------------------
 for (lng in learnr_langs) {
   lng_name <- if (lng %in% names(languages)) paste(" for", languages[lng])
-  if (lng == "en") paste(lng_name, "(default)")
+  if (lng == "en") 
+    lng_name <- paste(lng_name, "(default)")
+  if (lng == "zh")
+    lng_name <- " for Chinese"
   cat("\n- `", lng, "`", lng_name, sep = "")
 }
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  jsonlite::write_json(
-#    list(
-#      button = list(runcode = "Ejecutar"),
-#      text = list(startover = "Empezar de nuevo")
-#    ),
-#    path = "tutorial_es.json",
-#    auto_unbox = TRUE
-#  )
+# jsonlite::write_json(
+#   list(
+#     button = list(runcode = "Ejecutar"),
+#     text = list(startover = "Empezar de nuevo")
+#   ),
+#   path = "tutorial_es.json",
+#   auto_unbox = TRUE
+# )
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  jsonlite::write_json(
-#    list(
-#      en = list(
-#        button = list(runcode = "Run the code"),
-#        text = list(startover = "Restart the tutorial")
-#      ),
-#      es = list(
-#        button = list(runcode = "Ejecutar"),
-#        text = list(startover = "Empezar de nuevo")
-#      )
-#    ),
-#    path = "custom_language.json",
-#    auto_unbox = TRUE
-#  )
+# jsonlite::write_json(
+#   list(
+#     en = list(
+#       button = list(runcode = "Run the code"),
+#       text = list(startover = "Restart the tutorial")
+#     ),
+#     es = list(
+#       button = list(runcode = "Ejecutar"),
+#       text = list(startover = "Empezar de nuevo")
+#     )
+#   ),
+#   path = "custom_language.json",
+#   auto_unbox = TRUE
+# )
 

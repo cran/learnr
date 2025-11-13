@@ -1,7 +1,9 @@
-
 # only handles id and classes
 as_selector <- function(selector) {
-  if (inherits(selector, "shiny_selector") || inherits(selector, "shiny_selector_list")) {
+  if (
+    inherits(selector, "shiny_selector") ||
+      inherits(selector, "shiny_selector_list")
+  ) {
     return(selector)
   }
 
@@ -30,12 +32,15 @@ as_selector <- function(selector) {
 
   classes <- str_remove(str_match_all(selector, "\\.([^.]+)"), "^\\.")
 
-  structure(class = "shiny_selector", list(
-    element = element,
-    id = id,
-    classes = classes,
-    match_everything = match_everything
-  ))
+  structure(
+    class = "shiny_selector",
+    list(
+      element = element,
+      id = id,
+      classes = classes,
+      match_everything = match_everything
+    )
+  )
 }
 
 as_selector_list <- function(selector) {
@@ -46,21 +51,31 @@ as_selector_list <- function(selector) {
   selector
 }
 
+#' @export
 format.shiny_selector <- function(x, ...) {
   if (x$match_everything) {
     paste0("* // match everything")
   } else {
-    paste0(x$element, if (!is.null(x$id)) paste0("#", x$id), paste0(".", x$classes, collapse = ""))
+    paste0(
+      x$element,
+      if (!is.null(x$id)) paste0("#", x$id),
+      paste0(".", x$classes, collapse = "")
+    )
   }
 }
+
+#' @export
 format.shiny_selector_list <- function(x, ...) {
   paste0(unlist(lapply(x, format, ...)), collapse = " ")
 }
 
+#' @export
 print.shiny_selector <- function(x, ...) {
   cat("// css selector\n")
   cat(format(x, ...), "\n")
 }
+
+#' @export
 print.shiny_selector_list <- function(x, ...) {
   cat("// css selector list\n")
   cat(format(x, ...), "\n")
